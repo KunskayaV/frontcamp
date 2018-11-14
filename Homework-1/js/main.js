@@ -1,53 +1,54 @@
-const API_KEY = '100a6ae2320b4ab19986e2c78103375b';
+import * as api from './api';
+import { dateToLocaleString } from './utils';
 
-async function getNews() {
-  const response = await fetch(`https://newsapi.org/v1/articles?source=bbc-news&apiKey=${API_KEY}`);
-
-  return response.json();
-}
-
-function dateToLocaleString(date) {
-  const options = {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  };
-
-  return (new Date(date)).toLocaleString('en-US', options);
-}
-
-class News {
+class Initializer {
   constructor() {
     this.news = [];
+    this.sources = [];
     document.addEventListener('DOMContentLoaded', this.initialize.bind(this));
   }
   
   initialize() {
+    this.newsContainter = document.getElementById('news');
     this.newsRoot = document.getElementById('newsroot');
-    this.moreButton = document.getElementById('more-button');
-    this.moreButton.addEventListener('click', this.getNewsPortion.bind(this));
-    this.getNewsPortion();
+    this.sourcesContainter = document.getElementById('sources');
+    this.sourcesRoot = document.getElementById('sourcesroot');
+    this.sourceButton = document.getElementById('source-button');
+
+
+    this.sourceButton.addEventListener('click', this.getSources.bind(this));
+    this.sourcesRoot.addEventListener('click', (e) => {
+      if (e.target && e.target.dataset.source) {
+        this.getNewsPortion(e.target.dataset.source);
+      }
+   })
   }
 
-  async getNewsPortion() {
-    const { status, articles } = await getNews();
-
+  async getNewsPortion(source) {
+    const { status, articles } = await api.getNews(source);
+``
     if (status === 'ok') {
-      this.news.push(articles);
+      this.sourcesContainter.style.display = 'none';
+      this.newsContainter.style.display = 'block';
       this.fillCards(articles);
-      this.moreButton.innerText = "More";
-      this.moreButton.style.display = !this.newsRoot.children.length ? 'none' : 'block';
-    } else {
-      this.moreButton.innerText = "Please, try again";
-      this.moreButton.style.display = 'block';
+    }
+  }
+
+  async getSources() {
+    const { status, sources } = await api.getSources();
+    if (status === 'ok') {
+      this.sources = sources;
+      this.newsContainter.style.display = 'none';
+      this.sourcesContainter.style.display = 'flex';
+      this.fillSources(sources);
     }
   }
 
   fillCards(cardsInfo) {
     const cards = cardsInfo.map(
       ({ title, description, url, urlToImage, publishedAt }) => `\
-        <div id="card">\
-          <img class="card-image" alt="image" src="${urlToImage}"/>\
+        <div class="card">\
+          <img class="card-image" alt="" src="${urlToImage}"/>\
           <div class="overlay"></div>\
           <div class="info">\
             <h3 class="title">${title}</h3>\
@@ -59,8 +60,16 @@ class News {
       </div>`
     );
 
-    this.newsRoot.innerHTML += cards;
+    this.newsRoot.innerHTML = cards.join('');
+  }
+
+  fillSources(sourcesInfo) {
+    const sources = sourcesInfo.map(
+      ({ name, id }) => `<a class="source" target="blank" data-source="${id}")}">${name}</a>`
+    );
+
+    this.sourcesRoot.innerHTML = sources.join('');
   }
 }
 
-new News ();
+new Initializer();

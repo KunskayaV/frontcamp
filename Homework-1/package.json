@@ -1,0 +1,23 @@
+{
+  "name": "frontcamp",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/KunskayaV/frontcamp.git",
+  "author": "Volha Kunskaya <volha_kunskaya@epam.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "webpack"
+  },
+  "devDependencies": {
+    "@babel/core": "7.1.6",
+    "@babel/preset-env": "7.1.6",
+    "@babel/register": "7.0.0",
+    "babel-loader": "8.0.4",
+    "babel-polyfill": "^6.26.0",
+    "webpack": "4.25.1",
+    "webpack-cli": "3.1.2"
+  },
+  "dependencies": {
+    "@babel/plugin-transform-async-to-generator": "^7.1.0"
+  }
+}

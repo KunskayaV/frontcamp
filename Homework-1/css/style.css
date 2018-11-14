@@ -3,13 +3,53 @@
   padding: 0;
 }
 
+body, html {
+  height: 100%;
+}
+
 body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px 40px;
+  padding: 40px 20px 0px;
   box-sizing: border-box;
   background-color: #d6e1fe;
+}
+
+#source-button {
+  min-width: 150px;
+  min-height: 40px;
+  margin: 20px;
+  padding: 10px 20px;
+  font-size: calc(10px + 6 * ((100vw - 320px) / 960));
+  font-weight: bold;
+  color: white;
+  border: none;
+  background-color: #6c9dd8;
+  cursor: pointer;
+}
+
+#sources {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  width: 100%;
+  padding: 10px 50px;
+  background-color: white;
+}
+
+#sourcesroot {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: space-around;
+}
+
+#news {
+  display: flex;
+  justify-content: column;
 }
 
 #newsroot {
@@ -17,42 +57,26 @@ body {
   flex-wrap: wrap;
   justify-content: center;
   align-items: space-between;
-  align-content: center;
+  padding-top: 20px;
 }
 
-#card {
+.resource {
+  margin: 40px 0;
+  font-size: 36px;
+  font-size: calc(18px + 12 * ((100vw - 320px) / 960));
+}
+
+.card {
   position: relative;
   display: flex;
-  flex: 1;
+  flex: 1 1 30%;
   max-width: 520px;
   max-height: 400px;
   min-width: 290px;
   min-height: 220px;
-  margin: 15px;
+  margin: 20px;
   color: white;
   background-color: aqua;
-}
-
-#more-button {
-  display: none;
-  width: 100%;
-  padding: 10px 10px;
-  font-size: 18px;
-  font-weight: bold;
-  color: white;
-  border: none;
-  background-color: blue;
-  cursor: pointer;
-}
-
-#more-button:focus {
-  outline: 0;
-}
-
-.source {
-  margin: 40px 0;
-  font-size: 36px;
-  font-size: calc(18px + 12 * ((100vw - 320px) / 960));
 }
 
 .card-image, .card-link {
@@ -71,6 +95,24 @@ body {
   height: 100%;
   background-color: black;
   opacity: 0.3;
+}
+
+.source {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 150px;
+  padding: 10px;
+  margin: 20px;
+  color: black;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.source:hover {
+  font-weight: bold;
 }
 
 .info {
