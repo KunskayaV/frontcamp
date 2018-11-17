@@ -1,15 +1,35 @@
-import { API_KEY } from './constants'; 
+import { request } from '../client';
+import { NEWS_ENDPOINT, API_KEY, STATUS_OK } from './constants'; 
 
-async function getNews(source) {
-  const response = await fetch(`https://newsapi.org/v2/top-headlines?sources=${source}&apiKey=${API_KEY}`);
+class API {
+  async getInfoFromEndpoint(path = '', additionalParams = {}) {
+    const response = await request(
+      NEWS_ENDPOINT,
+      path,
+      Object.assign({ 'apiKey': API_KEY }, additionalParams)
+    );
 
-  return response.json();
+    if (response.status !== STATUS_OK) {
+      Object.assign(response, { error: true });
+    }
+
+    return response;
+  }
+
+  async getNews(source) {
+    const response = await this.getInfoFromEndpoint(
+      'top-headlines',
+      { 'sources': source },
+    );
+  
+    return response;
+  }
+
+  async getSources() {
+    const response = await this.getInfoFromEndpoint('sources');
+  
+    return response;
+  }
 }
 
-async function getSources() {
-  const response = await fetch(`https://newsapi.org/v2/sources?apiKey=${API_KEY}`);
-
-  return response.json();
-}
-
-export { getNews, getSources };
+export default API;
