@@ -12,7 +12,8 @@ class DomStore {
     this.sourcesContainter = document.getElementById('sources');
     this.sourcesRoot = document.getElementById('sourcesroot');
     this.sourceButton = document.getElementById('source-button');
-
+    this.preloadRoot = document.getElementById('preloadroot');
+    this.errorRoot = document.getElementById('error');
 
     this.sourceButton.addEventListener('click', sourceButtonListener.bind(this));
     this.sourcesRoot.addEventListener('click', sourceListener.bind(this))

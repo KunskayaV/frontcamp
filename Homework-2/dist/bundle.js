@@ -303,6 +303,8 @@ function () {
       this.sourcesContainter = document.getElementById('sources');
       this.sourcesRoot = document.getElementById('sourcesroot');
       this.sourceButton = document.getElementById('source-button');
+      this.preloadRoot = document.getElementById('preloadroot');
+      this.errorRoot = document.getElementById('error');
       this.sourceButton.addEventListener('click', sourceButtonListener.bind(this));
       this.sourcesRoot.addEventListener('click', sourceListener.bind(this));
     }
@@ -369,6 +371,55 @@ function (_DomStore) {
   }
 
   _createClass(Initializer, [{
+    key: "getData",
+    value: function () {
+      var _getData = _asyncToGenerator(
+      /*#__PURE__*/
+      regeneratorRuntime.mark(function _callee(apiMethod, text, rootToHide) {
+        var _this$api;
+
+        var _len,
+            data,
+            _key,
+            response,
+            _args = arguments;
+
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                this.renderer.showPreload(this.preloadRoot, text, rootToHide);
+
+                for (_len = _args.length, data = new Array(_len > 3 ? _len - 3 : 0), _key = 3; _key < _len; _key++) {
+                  data[_key - 3] = _args[_key];
+                }
+
+                _context.next = 4;
+                return (_this$api = this.api)[apiMethod].apply(_this$api, data);
+
+              case 4:
+                response = _context.sent;
+                this.renderer.hidePreload(this.preloadRoot);
+
+                if (response.error) {
+                  this.renderer.showError(this.errorRoot);
+                }
+
+                return _context.abrupt("return", response);
+
+              case 8:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      return function getData(_x, _x2, _x3) {
+        return _getData.apply(this, arguments);
+      };
+    }()
+  }, {
     key: "setSource",
     value: function setSource(e) {
       if (e.target && e.target.dataset.source) {
@@ -380,18 +431,18 @@ function (_DomStore) {
     value: function () {
       var _getNewsPortion = _asyncToGenerator(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee(source) {
+      regeneratorRuntime.mark(function _callee2(source) {
         var _ref, error, articles;
 
-        return regeneratorRuntime.wrap(function _callee$(_context) {
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
-            switch (_context.prev = _context.next) {
+            switch (_context2.prev = _context2.next) {
               case 0:
-                _context.next = 2;
-                return this.api.getNews(source);
+                _context2.next = 2;
+                return this.getData('getNews', 'news', this.sourcesContainter, source);
 
               case 2:
-                _ref = _context.sent;
+                _ref = _context2.sent;
                 error = _ref.error;
                 articles = _ref.articles;
 
@@ -401,13 +452,13 @@ function (_DomStore) {
 
               case 6:
               case "end":
-                return _context.stop();
+                return _context2.stop();
             }
           }
-        }, _callee, this);
+        }, _callee2, this);
       }));
 
-      return function getNewsPortion(_x) {
+      return function getNewsPortion(_x4) {
         return _getNewsPortion.apply(this, arguments);
       };
     }()
@@ -416,18 +467,18 @@ function (_DomStore) {
     value: function () {
       var _getSources = _asyncToGenerator(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee2() {
+      regeneratorRuntime.mark(function _callee3() {
         var _ref2, error, sources;
 
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+        return regeneratorRuntime.wrap(function _callee3$(_context3) {
           while (1) {
-            switch (_context2.prev = _context2.next) {
+            switch (_context3.prev = _context3.next) {
               case 0:
-                _context2.next = 2;
-                return this.api.getSources();
+                _context3.next = 2;
+                return this.getData('getSources', 'sources', this.newsContainter);
 
               case 2:
-                _ref2 = _context2.sent;
+                _ref2 = _context3.sent;
                 error = _ref2.error;
                 sources = _ref2.sources;
 
@@ -437,10 +488,10 @@ function (_DomStore) {
 
               case 6:
               case "end":
-                return _context2.stop();
+                return _context3.stop();
             }
           }
-        }, _callee2, this);
+        }, _callee3, this);
       }));
 
       return function getSources() {
@@ -500,6 +551,30 @@ function () {
       rootToHide.style.display = 'none';
       rootToShow.style.display = 'flex';
       this.fillRoot(sourceRoot, sourcesInfo, _templates__WEBPACK_IMPORTED_MODULE_0__["sourceTemplate"]);
+    }
+  }, {
+    key: "showPreload",
+    value: function showPreload(preloadRoot, text, rootToHide) {
+      rootToHide.style.display = 'none';
+      preloadRoot.hidden = false;
+      preloadRoot.style.display = 'flex';
+      this.fillRoot(preloadRoot, [{
+        text: text
+      }], _templates__WEBPACK_IMPORTED_MODULE_0__["preloadTemplate"]);
+    }
+  }, {
+    key: "hidePreload",
+    value: function hidePreload(preloadRoot) {
+      preloadRoot.hidden = true;
+      preloadRoot.style.display = 'none';
+    }
+  }, {
+    key: "showError",
+    value: function showError(errorRoot) {
+      errorRoot.classList.add('show');
+      setTimeout(function () {
+        return errorRoot.classList.remove('show');
+      }, 2000);
     }
   }]);
 
@@ -641,22 +716,11 @@ new _classes__WEBPACK_IMPORTED_MODULE_1__["Initializer"](api, renderer);
 
 /***/ }),
 
-/***/ "./js/templates/errorTemplate.js":
-/*!***************************************!*\
-  !*** ./js/templates/errorTemplate.js ***!
-  \***************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-
-
-/***/ }),
-
 /***/ "./js/templates/index.js":
 /*!*******************************!*\
   !*** ./js/templates/index.js ***!
   \*******************************/
-/*! no static exports found */
+/*! exports provided: newsTemplate, sourceTemplate, preloadTemplate */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -667,9 +731,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _sourceTemplate__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./sourceTemplate */ "./js/templates/sourceTemplate.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "sourceTemplate", function() { return _sourceTemplate__WEBPACK_IMPORTED_MODULE_1__["sourceTemplate"]; });
 
-/* harmony import */ var _errorTemplate__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./errorTemplate */ "./js/templates/errorTemplate.js");
-/* harmony import */ var _errorTemplate__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_errorTemplate__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _errorTemplate__WEBPACK_IMPORTED_MODULE_2__) if(["newsTemplate","sourceTemplate","default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _errorTemplate__WEBPACK_IMPORTED_MODULE_2__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _preloadTemplate__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./preloadTemplate */ "./js/templates/preloadTemplate.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "preloadTemplate", function() { return _preloadTemplate__WEBPACK_IMPORTED_MODULE_2__["preloadTemplate"]; });
+
 
 
 
@@ -695,6 +759,23 @@ function newsTemplate(_ref) {
       urlToImage = _ref.urlToImage,
       publishedAt = _ref.publishedAt;
   return "  <div class=\"card\">    <img class=\"card-image\" alt=\"\" src=\"".concat(urlToImage, "\"/>    <div class=\"overlay\"></div>    <div class=\"info\">      <h3 class=\"title\">").concat(title, "</h3>      <p class=\"description\">").concat(description, "</p>      <p class=\"date\">").concat(Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_0__["dateToLocaleString"])(publishedAt), "</p>    </div>    <a class=\"card-link\" href=\"").concat(url, "\" target=\"blank\"></a>  </div>\n  </div>");
+}
+
+/***/ }),
+
+/***/ "./js/templates/preloadTemplate.js":
+/*!*****************************************!*\
+  !*** ./js/templates/preloadTemplate.js ***!
+  \*****************************************/
+/*! exports provided: preloadTemplate */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "preloadTemplate", function() { return preloadTemplate; });
+function preloadTemplate(_ref) {
+  var text = _ref.text;
+  return "<p class=\"loading-text\">Loading ".concat(text, "...</p>");
 }
 
 /***/ }),

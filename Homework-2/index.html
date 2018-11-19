@@ -10,12 +10,20 @@
 <body>
   <h1 class="resource">Resource: <a href="https://newsapi.org/" target="blank">https://newsapi.org/</a></h1>
   <button id="source-button">Source</button>
-  <div id="sources">
-    <h2>Choose news source</h2>
-    <div id="sourcesroot"></div>
-  </div>
-  <div id="news">
-    <div id="newsroot"></div>
+  <div class="info-container">
+    <div id="sources">
+      <h2>Choose news source</h2>
+      <div id="sourcesroot"></div>
+    </div>
+    <div id="news">
+      <div id="newsroot"></div>
+    </div>
+    <div id="preloadroot" hidden>
+      <p class="loading-text">Loading...</p>
+    </div>
+    <div id="error">
+      <p class="error-message">Something went wrong. Try again.</p>
+    </div>
   </div>
   <script src="dist/bundle.js"></script>
 </body>
