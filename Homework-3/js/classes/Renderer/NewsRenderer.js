@@ -1,6 +1,7 @@
 import Renderer from './Renderer';
-
 import * as templates from './templates';
+
+import '../../../css/news.scss';
 
 export default class NewsRenderer extends Renderer {
   renderNews(newsRoot, cardsInfo, rootToShow, rootToHide) {
