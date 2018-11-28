@@ -17,7 +17,7 @@ export default {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].bundle.js',
     chunkFilename: '[name].bundle.js',
-    publicPath: '/'
+    publicPath: ''
   },
   resolveLoader: {
     modules: ['node_modules', path.resolve(__dirname, 'loaders')]
