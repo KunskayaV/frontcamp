@@ -1,2 +1,2 @@
 export { default as Initializer } from './Intializer/Initializer';
-export { default as Renderer } from './Renderer';
+export { default as Renderer } from './Renderer/Renderer';

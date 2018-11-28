@@ -1,16 +1,21 @@
 import { request } from '../client';
-import { NEWS_ENDPOINT, API_KEY, STATUS_OK } from './constants'; 
 
 class API {
+  constructor(endpoint, key, statusOk) {
+    this.endpoint = endpoint;
+    this.apiKey = key;
+    this.statusOk = statusOk;
+  }
+
   async getInfoFromEndpoint(path = '', additionalParams = {}) {
     const response = await request(
-      NEWS_ENDPOINT,
+      this.endpoint,
       path,
-      Object.assign({ 'apiKey': API_KEY }, additionalParams)
+      Object.assign({ 'apiKey': this.apiKey }, additionalParams)
     );
 
-    if (response.status !== STATUS_OK) {
-      Object.assign(response, { error: true });
+    if (response.status !== this.statusOk) {
+      throw Error();
     }
 
     return response;

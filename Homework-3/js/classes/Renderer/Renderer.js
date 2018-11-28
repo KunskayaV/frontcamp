@@ -1,4 +1,4 @@
-import * as templates from '../templates';
+import * as templates from './templates';
 
 class Renderer {
   fillRoot(root, info, template) {
@@ -7,10 +7,19 @@ class Renderer {
     root.innerHTML = toRender.join('');
   }
 
-  renderNews(newsRoot, cardsInfo, rootToShow, rootToHide) {
-    rootToHide.style.display = 'none';
-    rootToShow.style.display = 'block';
-    this.fillRoot(newsRoot, cardsInfo, templates.newsTemplate);
+  getNewsRenderer() {
+    return import(
+      /* webpackChunkName: "news" */
+      /* webpackMode: "lazy" */
+      '../Renderer/NewsRenderer.js'
+    )
+    .then(({ default: NewsRenderer }) => new NewsRenderer)
+    .catch(() => console.log('An error occurred while loading the component'));
+  }
+
+  renderNews(...args) {
+    this.getNewsRenderer()
+      .then(newsRenderer => newsRenderer.renderNews(...args));
   }
 
   renderSources(sourceRoot, sourcesInfo, rootToShow, rootToHide) {
@@ -23,7 +32,6 @@ class Renderer {
     rootToHide.style.display = 'none';
     preloadRoot.hidden = false;
     preloadRoot.style.display = 'flex';
-
 
     this.fillRoot(preloadRoot, [{ text }], templates.preloadTemplate);
   }
