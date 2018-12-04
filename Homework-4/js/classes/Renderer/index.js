@@ -1,1 +1,1 @@
-export { default } from './Renderer';
+export { default } from './AppRenderer';

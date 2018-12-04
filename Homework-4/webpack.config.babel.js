@@ -8,7 +8,6 @@ export default {
       'babel-polyfill',
       path.resolve(__dirname, 'css/style.scss'),
       path.resolve(__dirname, 'css/loader.scss'),
-      path.resolve(__dirname, 'css/error.scss'),
       path.resolve(__dirname, 'js/main.js'),
       path.resolve(__dirname, 'js/file.json')
     ]

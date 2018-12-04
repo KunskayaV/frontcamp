@@ -1,4 +1,4 @@
-import { dateToLocaleString } from '../../../utils/helpers';
+import { dateToLocaleString } from '../../../utils/dateToLocaleString';
 
 export function newsTemplate({ title, description, url, urlToImage, publishedAt }) {
   return (`\
