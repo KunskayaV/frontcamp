@@ -1,10 +1,14 @@
 import API from './api';
-import { Initializer, AppRenderer } from './classes';
+import { AppRenderer } from './classes';
 import { NEWS_ENDPOINT, API_KEY, STATUS_OK } from './config/constants'; 
-/* const json = require('./file.json');
 
-console.log('json', json) */
+import Model from './model';
+import View from './view';
+import Controller from './controller';
+
 const api = new API(NEWS_ENDPOINT, API_KEY, STATUS_OK);
 const renderer = new AppRenderer();
-new Initializer(api, renderer);
 
+const model = new Model(api);
+const view = new View(model, renderer);
+new Controller(model, view);

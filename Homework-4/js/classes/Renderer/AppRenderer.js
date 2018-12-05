@@ -24,8 +24,8 @@ class AppRenderer {
       .then(errorRenderer => errorRenderer.renderError(errorRoot));
   }
 
-  showPreload(preloadRoot, text, rootToHide) {
-    rootToHide.style.display = 'none';
+  showPreload(preloadRoot, text, ...rootsToHide) {
+    rootsToHide.forEach(root => root.style.display = 'none');
     preloadRoot.hidden = false;
     preloadRoot.style.display = 'flex';
 

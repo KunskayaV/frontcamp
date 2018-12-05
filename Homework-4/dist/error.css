@@ -1,0 +1,25 @@
+#error {
+  position: fixed;
+  top: 210px;
+  right: -230px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: 'center';
+  width: 220px;
+  height: 20px;
+  padding: 5px 5px;
+  background-color: #1cc950;
+  transition: right 1s ease-in-out; }
+
+.error-message {
+  font-size: 15px;
+  color: #000000; }
+
+.show {
+  right: 0px !important; }
+
+.hide {
+  right: -230px !important; }
+
+
+/*# sourceMappingURL=error.css.map*/

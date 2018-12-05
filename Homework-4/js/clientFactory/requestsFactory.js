@@ -18,7 +18,7 @@ export default class RequestsFactory {
    createRequester(url, path) {
     const fullPath = `${url}${path && `/${path}`}`;
 
-    this.requesters[fullPath] = {
+    this.requesters[fullPath] = this.requesters[fullPath] || {
       get: async (params) => {
         try {
           const response = await fetch(`${fullPath}${toQueryString(params)}`);
