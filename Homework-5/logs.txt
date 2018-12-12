@@ -1,0 +1,377 @@
+2.3 mongoimport
+$ ./mongoimport --db frontcamp --collection restaurants --file /e/mine/dev/frontcamp/restaurants.json
+2018-12-12T21:02:50.648+0300    connected to: localhost
+2018-12-12T21:02:52.189+0300    imported 25359 documents
+
+2.4 check documents conunt
+$ ./mongo
+MongoDB shell version v4.0.4
+connecting to: mongodb://127.0.0.1:27017
+Implicit session: session { "id" : UUID("c420fb22-5552-48de-9747-8db9a0b8339b") }
+MongoDB server version: 4.0.4
+use frontcamp
+switched to db frontcamp
+db.restaurants.count()
+25359
+
+
+3. document schema
+{
+        "_id" : ObjectId("5c114d4a1ae2dcd84ff97c5f"),
+        "address" : {
+                "building" : "8825",
+                "coord" : [
+                        -73.8803827,
+                        40.7643124
+                ],
+                "street" : "Astoria Boulevard",
+                "zipcode" : "11369"
+        },
+        "borough" : "Queens",
+        "cuisine" : "American",
+        "grades" : [
+                {
+                        "date" : ISODate("2014-11-15T00:00:00Z"),
+                        "grade" : "Z",
+                        "score" : 38
+                },
+                {
+                        "date" : ISODate("2014-05-02T00:00:00Z"),
+                        "grade" : "A",
+                        "score" : 10
+                },
+                {
+                        "date" : ISODate("2013-03-02T00:00:00Z"),
+                        "grade" : "A",
+                        "score" : 7
+                },
+                {
+                        "date" : ISODate("2012-02-10T00:00:00Z"),
+                        "grade" : "A",
+                        "score" : 13
+                }
+        ],
+        "name" : "Brunos On The Boulevard",
+        "restaurant_id" : "40356151"
+}
+
+3.1 How many “Chinese” (cuisine) restaurants are in “Queens” (borough)? 
+db.restaurants.find({borough: "Queens", cuisine: "Chinese"}).count()
+728
+
+3.2 What is the _id of the restaurant which has the grade with the highest ever score? 
+db.restaurants.find({}, {_id: 1}).sort({"grades.score": -1}).toArray()[0]._id
+ObjectId("5c114d4b1ae2dcd84ff97dbd")
+
+3.3 Add a grade { grade: "A", score: 7, date: ISODate() } to every restaurant in “Manhattan” (borough).
+db.restaurants.update({borough: "Manhattan"}, {$push: {grades: { grade: "A", score: 7, date: new Date() }}}, {multi: true})
+WriteResult({ "nMatched" : 10259, "nUpserted" : 0, "nModified" : 10259 })
+
+3.4 What are the names of the restaurants which have a grade at index 8 with score less then 7? Use projection to include only names without _id.
+db.restaurants.find({"grades.8.score": {$lt: 7}}, {_id: 0, name: 1})
+{ "name" : "Silver Krust West Indian Restaurant" }
+{ "name" : "Pure Food" }
+
+
+3.5 What are _id and borough of “Seafood” (cuisine) restaurants which received at least one “B” grade in period from
+2014-02-01 to 2014-03-01? Use projection to include only _id and borough.
+db.restaurants.find({ $and: [{cuisine: "Seafood"}, {"grades.date": { $gt:ISODate('2014-02-01 00:00:00.000'), $lt:ISODate('2014-03-01 00:00:00.000')}}, {"grades.grade": "B"}]}, {borough: 1})
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa47db"), "borough" : "Queens" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa47e1"), "borough" : "Manhattan" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa4812"), "borough" : "Bronx" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa488f"), "borough" : "Bronx" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa4908"), "borough" : "Brooklyn" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa4bf7"), "borough" : "Manhattan" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa4f88"), "borough" : "Manhattan" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa50aa"), "borough" : "Manhattan" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa5235"), "borough" : "Manhattan" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa5328"), "borough" : "Manhattan" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa539e"), "borough" : "Brooklyn" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa53a9"), "borough" : "Manhattan" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa5672"), "borough" : "Manhattan" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa56c4"), "borough" : "Manhattan" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa56f2"), "borough" : "Queens" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa5760"), "borough" : "Brooklyn" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa57ce"), "borough" : "Manhattan" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa5b29"), "borough" : "Manhattan" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa5f64"), "borough" : "Queens" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa6063"), "borough" : "Queens" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa6591"), "borough" : "Manhattan" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa65a2"), "borough" : "Manhattan" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa65db"), "borough" : "Manhattan" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa675d"), "borough" : "Manhattan" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa6848"), "borough" : "Bronx" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa69a6"), "borough" : "Brooklyn" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa6b12"), "borough" : "Queens" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa6e09"), "borough" : "Bronx" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa6e4e"), "borough" : "Manhattan" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa70d3"), "borough" : "Brooklyn" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa711e"), "borough" : "Queens" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa7344"), "borough" : "Staten Island" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa76c2"), "borough" : "Manhattan" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa77f7"), "borough" : "Manhattan" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa7c44"), "borough" : "Manhattan" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa7c79"), "borough" : "Bronx" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa7ef1"), "borough" : "Manhattan" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa7f3a"), "borough" : "Brooklyn" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa8092"), "borough" : "Brooklyn" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa84f5"), "borough" : "Bronx" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa852a"), "borough" : "Brooklyn" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa8592"), "borough" : "Manhattan" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa895b"), "borough" : "Manhattan" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa8d59"), "borough" : "Brooklyn" }
+{ "_id" : ObjectId("5c115d8d1ae2dcd84ffa8dc6"), "borough" : "Brooklyn" }
+{ "_id" : ObjectId("5c115d8e1ae2dcd84ffa92bd"), "borough" : "Manhattan" }
+
+
+4.1 Create an index
+db.restaurants.explain().find({name: "Glorious Food"})
+{
+        "queryPlanner" : {
+                "plannerVersion" : 1,
+                "namespace" : "frontcamp.restaurants",
+                "indexFilterSet" : false,
+                "parsedQuery" : {
+                        "name" : {
+                                "$eq" : "Glorious Food"
+                        }
+                },
+                "winningPlan" : {
+                        "stage" : "FETCH",
+                        "inputStage" : {
+                                "stage" : "IXSCAN",
+                                "keyPattern" : {
+                                        "name" : 1
+                                },
+                                "indexName" : "glorious index",
+                                "isMultiKey" : false,
+                                "multiKeyPaths" : {
+                                        "name" : [ ]
+                                },
+                                "isUnique" : false,
+                                "isSparse" : false,
+                                "isPartial" : true,
+                                "indexVersion" : 2,
+                                "direction" : "forward",
+                                "indexBounds" : {
+                                        "name" : [
+                                                "[\"Glorious Food\", \"Glorious Food\"]"
+                                        ]
+                                }
+                        }
+                },
+                "rejectedPlans" : [ ]
+        },
+        "serverInfo" : {
+                "host" : "DESKTOP-S6ECPQU",
+                "port" : 27017,
+                "version" : "4.0.4",
+                "gitVersion" : "f288a3bdf201007f3693c58e140056adf8b04839"
+        },
+        "ok" : 1
+}
+
+4.2 drop index
+db.restaurants.dropIndex('glorious index')
+{ "nIndexesWas" : 2, "ok" : 1 }
+
+4.3 Create an index to make this query covered
+db.restaurants.explain().find({ restaurant_id: "41098650" }, { _id: 0, borough: 1 })
+{
+        "queryPlanner" : {
+                "plannerVersion" : 1,
+                "namespace" : "frontcamp.restaurants",
+                "indexFilterSet" : false,
+                "parsedQuery" : {
+                        "restaurant_id" : {
+                                "$eq" : "41098650"
+                        }
+                },
+                "winningPlan" : {
+                        "stage" : "PROJECTION",
+                        "transformBy" : {
+                                "_id" : 0,
+                                "borough" : 1
+                        },
+                        "inputStage" : {
+                                "stage" : "COLLSCAN",
+                                "filter" : {
+                                        "restaurant_id" : {
+                                                "$eq" : "41098650"
+                                        }
+                                },
+                                "direction" : "forward"
+                        }
+                },
+                "rejectedPlans" : [ ]
+        },
+        "serverInfo" : {
+                "host" : "DESKTOP-S6ECPQU",
+                "port" : 27017,
+                "version" : "4.0.4",
+                "gitVersion" : "f288a3bdf201007f3693c58e140056adf8b04839"
+        },
+        "ok" : 1
+}
+
+4.4 create partial index
+db.restaurants.explain().find({ borough: "Staten Island", cuisine: "American" })
+{
+        "queryPlanner" : {
+                "plannerVersion" : 1,
+                "namespace" : "frontcamp.restaurants",
+                "indexFilterSet" : false,
+                "parsedQuery" : {
+                        "$and" : [
+                                {
+                                        "borough" : {
+                                                "$eq" : "Staten Island"
+                                        }
+                                },
+                                {
+                                        "cuisine" : {
+                                                "$eq" : "American"
+                                        }
+                                }
+                        ]
+                },
+                "winningPlan" : {
+                        "stage" : "FETCH",
+                        "inputStage" : {
+                                "stage" : "IXSCAN",
+                                "keyPattern" : {
+                                        "cuisine" : 1,
+                                        "borough" : 1
+                                },
+                                "indexName" : "cuisine_1_borough_1",
+                                "isMultiKey" : false,
+                                "multiKeyPaths" : {
+                                        "cuisine" : [ ],
+                                        "borough" : [ ]
+                                },
+                                "isUnique" : false,
+                                "isSparse" : false,
+                                "isPartial" : true,
+                                "indexVersion" : 2,
+                                "direction" : "forward",
+                                "indexBounds" : {
+                                        "cuisine" : [
+                                                "[\"American\", \"American\"]"
+                                        ],
+                                        "borough" : [
+                                                "[\"Staten Island\", \"Staten Island\"]"
+                                        ]
+                                }
+                        }
+                },
+                "rejectedPlans" : [ ]
+        },
+        "serverInfo" : {
+                "host" : "DESKTOP-S6ECPQU",
+                "port" : 27017,
+                "version" : "4.0.4",
+                "gitVersion" : "f288a3bdf201007f3693c58e140056adf8b04839"
+        },
+        "ok" : 1
+}
+
+db.restaurants.explain().find({ borough: "Staten Island", name: "Bagel Land" })
+{
+        "queryPlanner" : {
+                "plannerVersion" : 1,
+                "namespace" : "frontcamp.restaurants",
+                "indexFilterSet" : false,
+                "parsedQuery" : {
+                        "$and" : [
+                                {
+                                        "borough" : {
+                                                "$eq" : "Staten Island"
+                                        }
+                                },
+                                {
+                                        "name" : {
+                                                "$eq" : "Bagel Land"
+                                        }
+                                }
+                        ]
+                },
+                "winningPlan" : {
+                        "stage" : "COLLSCAN",
+                        "filter" : {
+                                "$and" : [
+                                        {
+                                                "borough" : {
+                                                        "$eq" : "Staten Island"
+                                                }
+                                        },
+                                        {
+                                                "name" : {
+                                                        "$eq" : "Bagel Land"
+                                                }
+                                        }
+                                ]
+                        },
+                        "direction" : "forward"
+                },
+                "rejectedPlans" : [ ]
+        },
+        "serverInfo" : {
+                "host" : "DESKTOP-S6ECPQU",
+                "port" : 27017,
+                "version" : "4.0.4",
+                "gitVersion" : "f288a3bdf201007f3693c58e140056adf8b04839"
+        },
+        "ok" : 1
+}
+
+db.restaurants.explain().find({ borough: "Queens", cuisine: "Pizza" })
+{
+        "queryPlanner" : {
+                "plannerVersion" : 1,
+                "namespace" : "frontcamp.restaurants",
+                "indexFilterSet" : false,
+                "parsedQuery" : {
+                        "$and" : [
+                                {
+                                        "borough" : {
+                                                "$eq" : "Queens"
+                                        }
+                                },
+                                {
+                                        "cuisine" : {
+                                                "$eq" : "Pizza"
+                                        }
+                                }
+                        ]
+                },
+                "winningPlan" : {
+                        "stage" : "COLLSCAN",
+                        "filter" : {
+                                "$and" : [
+                                        {
+                                                "borough" : {
+                                                        "$eq" : "Queens"
+                                                }
+                                        },
+                                        {
+                                                "cuisine" : {
+                                                        "$eq" : "Pizza"
+                                                }
+                                        }
+                                ]
+                        },
+                        "direction" : "forward"
+                },
+                "rejectedPlans" : [ ]
+        },
+        "serverInfo" : {
+                "host" : "DESKTOP-S6ECPQU",
+                "port" : 27017,
+                "version" : "4.0.4",
+                "gitVersion" : "f288a3bdf201007f3693c58e140056adf8b04839"
+        },
+        "ok" : 1
+}
+
+4.5 Create an index to make query from task 3.4 covered
+db.restaurants.createIndex({ name: 1, grades: 1 }, { partialFilterExpression: { "grades.8.score": {$lt: 7}} })
