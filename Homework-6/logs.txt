@@ -1,0 +1,278 @@
+1. Import Airline Collection
+
+$ ./mongoimport.exe -d frontcamp -c airlines --type csv --headerline --file /e/mine/dev/frontcamp/airlines.csv
+2018-12-18T23:27:47.767+0300    connected to: localhost
+2018-12-18T23:27:49.579+0300    [........................] frontcamp.airlines   516KB/19.1MB (2.6%)
+2018-12-18T23:27:52.548+0300    [########................] frontcamp.airlines   6.93MB/19.1MB (36.4%)
+2018-12-18T23:27:55.546+0300    [##################......] frontcamp.airlines   15.1MB/19.1MB (79.0%)
+2018-12-18T23:27:56.631+0300    [########################] frontcamp.airlines   19.1MB/19.1MB (100.0%)
+2018-12-18T23:27:56.632+0300    imported 186648 documents
+
+1.4 Verify that the number of the documents in the airlines collection is 186648
+$ ./mongo
+MongoDB shell version v4.0.4
+connecting to: mongodb://127.0.0.1:27017
+Implicit session: session { "id" : UUID("a25ad7b3-5762-48bc-80fa-472e231a3a36") }
+MongoDB server version: 4.0.4
+use frontcamp
+switched to db frontcamp
+db.airlines.count()
+186648
+
+2. Aggregating Airlines Collection
+
+document schema
+db.airlines.findOne()
+{
+        "_id" : ObjectId("5c1958441ae2dcd84ffab9d1"),
+        "passengers" : 0,
+        "carrier" : "Korean Air Lines Co. Ltd.",
+        "originCity" : "Seoul, South Korea",
+        "originState" : "",
+        "originCountry" : "South Korea",
+        "destCity" : "Atlanta, GA",
+        "destState" : "Georgia",
+        "destCountry" : "United States",
+        "class" : "G"
+}
+
+2.1. How many records does each airline class have?
+
+db.airlines.aggregate([
+  {
+    $group: {
+      _id: '$class', 
+      total: { $sum: 1}
+    }
+  }, {
+    '$project': {
+      _id: 0, 
+      class: '$_id', 
+      total: '$total'
+    }
+  }
+])
+
+{ "class" : "F", "total" : 140343 }
+{ "class" : "L", "total" : 23123 }
+{ "class" : "P", "total" : 5683 }
+{ "class" : "G", "total" : 17499 }
+
+2.2 What are the top 3 destination cities outside of the United States with the highest average passengers count?
+
+db.airlines.aggregate([
+  {
+    $match: {
+      destCountry: {$ne: 'United States'}
+    }
+  }, {
+    $group: {
+      _id: '$destCity',
+      avgPassengers: { $avg: '$passengers' }
+    }
+  }, {
+    $project: {
+      _id: 0,
+      avgPassengers: '$avgPassengers',
+      city: '$_id'
+    }
+  }, {
+    $sort: {
+      avgPassengers: -1
+    }
+  }, {
+    $limit: 3
+  }
+])
+
+{ "avgPassengers" : 8052.380952380952, "city" : "Abu Dhabi, United Arab Emirates" }
+{ "avgPassengers" : 7176.596638655462, "city" : "Dubai, United Arab Emirates" }
+{ "avgPassengers" : 7103.333333333333, "city" : "Guangzhou, China" }
+
+2.3 Which carriers provide flights to Latvia (destCountry)?
+
+db.airlines.aggregate([
+  {
+    $match: {
+      destCountry: 'Latvia'
+    }
+  }, {
+    $group: {
+      _id: '$destCountry', 
+      carriers: {
+        $addToSet: '$carrier'
+      }
+    }
+  }
+])
+
+{ "_id" : "Latvia", "carriers" : [ "Uzbekistan Airways", "Blue Jet SP Z o o", "JetClub AG" ] }
+
+2.4 What are the carriers which flue the most number of passengers from the United State to either
+Greece, Italy or Spain? Find top 10 carriers, but provide the last 7 carriers (do not include the
+first 3)
+
+db.airlines.aggregate([
+  {
+    $match: {
+      originCountry: 'United States', 
+      destCountry: { $in: ['Greece', 'Italy', 'Spain'] }
+    }
+  }, {
+    $group: {
+      _id: '$carrier', 
+      total: { $sum: '$passengers' }
+    }
+  }, {
+    $sort: { total: -1 }
+  }, {
+    $limit: 10
+  }, {
+    $skip: 3
+  }
+])
+
+{ "_id" : "Compagnia Aerea Italiana", "total" : 280256 }
+{ "_id" : "United Air Lines Inc.", "total" : 229936 }
+{ "_id" : "Emirates", "total" : 100903 }
+{ "_id" : "Air Europa", "total" : 94968 }
+{ "_id" : "Meridiana S.p.A", "total" : 20308 }
+{ "_id" : "Norwegian Air Shuttle ASA", "total" : 13344 }
+{ "_id" : "VistaJet Limited", "total" : 183 }
+
+2.5. Find the city (originCity) with the highest sum of passengers for each state (originState)
+of the United States (originCountry). Provide the city for the first 5 states ordered by state
+alphabetically (you should see the city for Alaska, Arizona and etc).
+
+db.airlines.aggregate([
+  {
+    $match: { originCountry: 'United States' }
+  }, {
+    $group: {
+      _id: {
+        state: '$originState',
+        city: '$originCity'
+      }, 
+      totalPassengers: { $sum: '$passengers' }
+    }
+  }, {
+    $group: {
+      _id: '$_id.state',
+      result: {
+        $push: {
+          totalPassengers: '$totalPassengers',
+          location: { city: '$_id.city' }
+        }
+      }
+    }
+  }, {
+    $project: {
+      _id: 0,
+      result: {
+        $reduce: {
+          input: '$result',
+          initialValue: { location: { city: '' }, totalPassengers: 0 },
+          in: {
+            $cond: {
+              if: { $gte: ['$$value.totalPassengers', '$$this.totalPassengers'] },
+              then: {
+                totalPassengers: '$$value.totalPassengers',
+                location: {
+                  city: '$$value.location.city',
+                  state: '$_id'
+                }
+              },
+              else: {
+                totalPassengers: '$$this.totalPassengers',
+                location: {
+                  city: '$$this.location.city',
+                  state: '$_id'
+                }
+              }
+            }
+          }
+        }
+      },
+      state: '$_id'
+    }
+  }, {
+    $sort: { state: 1 }
+  }, {
+    $project: {
+      totalPassengers: '$result.totalPassengers',
+      location: {
+        city: '$result.location.city',
+        state: '$result.location.state'
+      }
+    }
+  }, {
+    $limit: 5
+  }
+])
+
+{ "totalPassengers" : 760120, "location" : { "city" : "Birmingham, AL", "state" : "Alabama" } }
+{ "totalPassengers" : 1472404, "location" : { "city" : "Anchorage, AK", "state" : "Alaska" } }
+{ "totalPassengers" : 13152753, "location" : { "city" : "Phoenix, AZ", "state" : "Arizona" } }
+{ "totalPassengers" : 571452, "location" : { "city" : "Little Rock, AR", "state" : "Arkansas" } }
+{ "totalPassengers" : 23701556, "location" : { "city" : "Los Angeles, CA", "state" : "California" } }
+
+
+Restore Enron Collection
+
+$ ./mongorestore -d frontcamp -c enron /e/mine/dev/frontcamp/messages.bson
+2018-12-19T22:23:04.887+0300    checking for collection data in E:\mine\dev\frontcamp\messages.bson
+2018-12-19T22:23:05.210+0300    reading metadata for frontcamp.enron from E:\mine\dev\frontcamp\messages.metadata.json
+2018-12-19T22:23:05.492+0300    restoring frontcamp.enron from E:\mine\dev\frontcamp\messages.bson
+2018-12-19T22:23:06.921+0300    [#.......................]  frontcamp.enron  17.6MB/378MB  (4.7%)
+2018-12-19T22:23:09.807+0300    [#####...................]  frontcamp.enron  81.3MB/378MB  (21.5%)
+2018-12-19T22:23:12.806+0300    [#######.................]  frontcamp.enron  125MB/378MB  (33.0%)
+2018-12-19T22:23:15.806+0300    [###########.............]  frontcamp.enron  182MB/378MB  (48.2%)
+2018-12-19T22:23:18.806+0300    [################........]  frontcamp.enron  256MB/378MB  (67.7%)
+2018-12-19T22:23:21.806+0300    [#####################...]  frontcamp.enron  331MB/378MB  (87.5%)
+2018-12-19T22:23:23.677+0300    [########################]  frontcamp.enron  378MB/378MB  (100.0%)
+2018-12-19T22:23:23.677+0300    no indexes to restore
+2018-12-19T22:23:23.677+0300    finished restoring frontcamp.enron (120477 documents)
+2018-12-19T22:23:23.677+0300    done
+
+Aggregate Enron Collection
+
+db.enron.aggregate([
+  {
+    $project: {
+      _id: 0,
+      from: '$headers.From',
+      to: '$headers.To',
+      letter: '$_id'
+    }
+  }, {
+    $unwind: {
+      path: '$to',
+      preserveNullAndEmptyArrays: false
+    }
+  }, {
+    $group: {
+      _id: {
+        letter: '$letter',
+        to: '$to',
+        from: '$from'
+      }
+    }
+  }, {
+    $group: {
+      _id: {
+        to: '$_id.to',
+        from: '$_id.from'
+      },
+      count: { $sum: 1 }
+    }
+  }, {
+    $sort: { count: -1 }
+  }, {
+    $limit: 1
+  }
+], {
+  allowDiskUse: true
+})
+
+{ "_id" : { "to" : "jeff.dasovich@enron.com", "from" : "susan.mara@enron.com" }, "count" : 750 }
+
