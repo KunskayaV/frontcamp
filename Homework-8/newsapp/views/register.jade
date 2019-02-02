@@ -1,0 +1,21 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    h6 User Registration
+    form(action='/users/register', method='post')
+      .form-group
+        label(for='name') Name
+        input(type='text', name='name', required='', autofocus='', value='{{name}}')
+      .form-group
+        label(for='email') Email
+        input(type='email', name='email', required='', value='{{email}}')
+      .form-group
+        label(for='password') Password
+        input(type='password', name='password', required='', value='{{password}}')
+      .form-group
+        label(for='cpassword') Confirm Password
+        input#cpassword(type='password', name='cpassword', required='', value='{{cpassword}}')
+      button(type='submit') Register

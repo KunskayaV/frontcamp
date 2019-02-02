@@ -4,9 +4,12 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const winston = require('winston');
+const passport = require('passport');
 
 const indexRouter = require('../routes/index');
 const newsRouter = require('../routes/news');
+const authRouter = require('../routes/auth');
+const authFacebookRouter = require('../routes/authFacebook');
 
 function addMiddlewares(app) {
   app.use(logger('dev'));
@@ -14,12 +17,15 @@ function addMiddlewares(app) {
   app.use(express.urlencoded({ extended: false }));
   app.use(cookieParser());
   app.use(express.static(path.join(__dirname, 'public')));
+  app.use(passport.initialize());
 
   app.all('*', function(req, res, next) {
     winston.log('info', `Date: ${(new Date).toLocaleString()} Url: ${req.url}`);
     next();
   });
 
+  app.use('/v3/auth/facebook', authFacebookRouter);
+  app.use('/v3/register', authRouter);
   app.use('/v3/news', newsRouter);
   app.use('/v3', indexRouter);
 

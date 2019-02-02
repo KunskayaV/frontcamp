@@ -1,25 +1,33 @@
 const express = require('express');
+const passport = require('passport');
 const router = express.Router();
-const createError = require('http-errors');
 
-const news = require('../bin/data/news.json');
-const { checkNews, getNewsById } = require('../bin/helpers');
+const db = require('../database');
 
 /* GET news page. */
 /* POST news page. */
 router.route('/')
-  .get(function(req, res) {
-    res.json(news);
-  })
-  .post(function(req, res) {
-    const news = req.body;
-    const allRequiredFieldsPresent = news.every(checkNews);
+  .get(
+    function(req, res) {
+      const callback = (err, news) => {
+        if (err) res.status(400).send('Something went wrong');
 
-    if(allRequiredFieldsPresent) {
-      res.status(200).send('News succesfully added');
-    } else {
-      res.status(400).send('Please specify all required fields of the news (id, name, description, url)');
+        if (news.length) {
+          res.status(200).json(news);
+        } else {
+          res.status(200).send('Empty news collection');
+        }
+      };
+
+      db.findInDataBase({ collectionName: 'news', callback });
     }
+  )
+  .post(function(req, res) {
+    db.addNewsDB(req.body)
+      .then(
+        () => res.status(200).send('News succesfully added'),
+        err => res.status(403).send(err)
+      );
   });
 
 /* GET news page by :id */
@@ -28,40 +36,68 @@ router.route('/')
 /* DELETE news pag eby :id */
 router.route('/:newsId')
   .get(function(req, res, next) {
-    const newsById = getNewsById(news.sources, req.params.newsId);
+      const callback = (err, news) => {
+        if (err) res.status(400).send('Something went wrong');
 
-    if (!newsById) {
-      res.status(404).send('News with specified id doesn\'t exist');
-    }
+        if (news.length) {
+          res.status(200).json(news);
+        } else {
+          res.status(404).send('News with specified id doesn\'t exist');
+        }
+      };
 
-    res.json(newsById);
+      db.findInDataBase({
+        collectionName: 'news',
+        query: { id: req.params.newsId },
+        callback,
+      });
   })
-  .post(function(req, res) {
-    const allRequiredFieldsPresent = checkNews([news]);
+  .post(
+    passport.authenticate('basic', {
+      session: false,
+      failureRedirect: '/v3/register',
+    }),
+    function(req, res) {
 
-    if(allRequiredFieldsPresent) {
-      res.status(200).send('News succesfully added');
-    } else {
-      res.status(400).send('Please specify all required fields of the news (id, name, description, url)');
+      const callback = (err, news) => {
+        if (err) res.status(400).send('Something went wrong');
+
+        res.status(204).send('News updated');
+      };
+
+      db.updateInDataBase({
+        collectionName: 'news',
+        query: {id: req.params.newsId },
+        data: req.body,
+        callback,
+      });
     }
-  })
+  )
   .put(function(req, res) {
-    const allRequiredFieldsPresent = checkNews([news]);
-
-    if(allRequiredFieldsPresent) {
-      res.status(200).send('News succesfully added/repleced');
-    } else {
-      res.status(400).send('Please specify all required fields of the news (id, name, description, url)');
-    }
+    db.addNewsDB({ ...req.body, id: req.params.newsId })
+      .then(
+        () => res.status(200).send('News succesfully added'),
+        err => res.status(403).send(err)
+      );
   })
-  .delete(function(req, res) {
-    const newsById = getNewsById(news.sources, req.params.newsId);
+  .delete(
+    passport.authenticate('basic', {
+      session: false,
+      failureRedirect: '/v3/register',
+    }),
+    function(req, res) {
+      const callback = (err, news) => {
+        if (err) res.status(404).send('Something went wrong');
 
-    if(newsById) {
-      res.status(200).send('News succesfully removed');
-    } else {
-      res.status(404).send('News to delete wasn\'t found');
+        res.status(204).send('News succesfully removed');
+      };
+
+      db.deleteFromDatabase({
+        collectionName: 'news',
+        options: { id: req.params.newsId },
+        callback
+      });
     }
-  });
+  );
 
 module.exports = router;
