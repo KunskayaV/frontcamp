@@ -1,0 +1,74 @@
+<p class="title">Edit</p>
+<div class="wrapper">
+  <div class="main-column">
+    <app-input
+      [label]="'Heading'"
+      [placeholder]="' '"
+      (getInputValue)="setValue($event, 'heading')"
+      [setInputValue]="getValueToSet('heading')"
+    ></app-input>
+    <app-input
+      [label]="'Short description'"
+      [placeholder]="' '"
+      (getInputValue)="setValue($event, 'description')"
+      [setInputValue]="getValueToSet('description')"
+
+    ></app-input>  
+    <app-textarea
+      [label]="'Content'"
+      [rows]="7"
+      (getEnteredText)="setValue($event, 'content')"
+      [setInputValue]="getValueToSet('content')"
+
+    ></app-textarea>  
+  </div>
+  <div class="secondary-column">
+    <div class="radio-controls-containter">
+      <label class="source-label">
+        <input type="radio" [value]="0" name="imageSource" [ngModel]="imageSource" (ngModelChange)="change($event)"> URL
+      </label>
+      <label class="source-label">
+        <input type="radio" [value]="1"  name="imageSource" [ngModel]="imageSource" (ngModelChange)="change($event)"> File
+      </label>
+    </div>
+    
+    <app-input
+      [label]="'Image'"
+      [placeholder]="' '"
+      (getInputValue)="setValue($event, 'image')"
+      [setInputValue]="getValueToSet('image')"
+    ></app-input>  
+    <app-input
+      [label]="'Date'"
+      [placeholder]="' '"
+      (getInputValue)="setValue($event, 'date')"
+      [setInputValue]="getValueToSet('date')"
+    ></app-input>  
+    <app-input
+      [label]="'Author'"
+      [placeholder]="' '"
+      (getInputValue)="setValue($event, 'author')"
+      [setInputValue]="getValueToSet('author')"
+    ></app-input>  
+    <app-input
+      [label]="'Source URL'"
+      [placeholder]="' '"
+      (getInputValue)="setValue($event, 'sourceUrl')"
+      [setInputValue]="getValueToSet('sourceUrl')"
+    ></app-input>  
+    <div class="buttons-container">
+      <app-button
+        [title]="'Save'"
+        [buttonStyle]="'dark'"
+        (onPress)="saveNews($event)"
+        [additionalStyle]="{'width.px': 100}"
+      ></app-button>
+      <app-button
+        [title]="'Cancel'"
+        [buttonStyle]="'dark'"
+        (onPress)="cancelEditing($event)"
+        [additionalStyle]="{'width.px': 100}"
+      ></app-button>
+    </div>
+  </div>
+</div>

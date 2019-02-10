@@ -1,0 +1,15 @@
+<div class="input-group">
+    <div class="input-group-prepend">
+      <div ngbDropdown class="d-inline-block">
+        <button class="btn btn-outline-secondary btn-sm" id="dropdownBasic1" ngbDropdownToggle>{{dropdownTitle}}</button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="scrollable-menu">
+          <app-button
+            *ngFor="let item of dropdownItems; let index = index"
+            [title]="item.title"
+            [additionalStyle]="{'width': '100%', 'text-align': 'left'}"
+            (onPress)="pickItem($event, index)"
+            >
+          </app-button>
+        </div>
+      </div>
+    </div>

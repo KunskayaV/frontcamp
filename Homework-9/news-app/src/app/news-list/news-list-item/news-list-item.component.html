@@ -1,0 +1,21 @@
+<div class="news-card">
+  <img src={{itemInfo.urlToImage}} alt="news image" class="card-image img-thumbnail"/>
+  <div class="text-container">
+    <div class="title-date-wrapper">
+      <p class="news-title">{{itemInfo.title}}</p>
+      <p class="news-date">Date: {{itemInfo.publishedAt}}</p>
+    </div>
+    <p class="news-description">{{itemInfo.description}}</p>
+    <app-button
+      [additionalStyle]="{'margin-left': '-10px', 'font-size.px': 12 }"
+      [title]="'Read more...'"
+      [buttonStyle]="'light'"
+      (onPress)="openNews($event)"
+    ></app-button>
+
+  </div>
+  <div *ngIf="isEditable" class="buttons-container">
+    <app-button [additionalStyle]="{'width': '100%'}" [title]="'Edit'" [buttonStyle]="'dark'" (onPress)="editNews($event)"></app-button>
+    <app-button [additionalStyle]="{'width': '100%'}" [title]="'Delete'" [buttonStyle]="'dark'" (onPress)="removeNews($event)"></app-button>
+  </div>
+</div>

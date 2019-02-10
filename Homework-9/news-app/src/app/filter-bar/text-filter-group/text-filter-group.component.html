@@ -1,0 +1,11 @@
+  <div class="input-group input-group-sm">
+    <input [(ngModel)]="inputFilter" type="text" class="form-control input-lg" placeholder="Type text here...">
+    <div class="input-group-append">
+      <app-button
+        [title]="'Filter'"
+        [buttonStyle]="'dark'"
+        (onPress)="filterList($event)"
+        [additionalClass]="'btn-sm'"
+      ></app-button>
+    </div>
+  </div>

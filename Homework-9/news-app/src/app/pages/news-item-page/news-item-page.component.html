@@ -1,0 +1,16 @@
+<p class="title">Full View of News</p>
+<div>
+  <div class="news-wrapper">
+    <img src={{itemInfo.urlToImage}} alt="news image" class="card-image img-thumbnail"/>
+    <div class="text-container">
+      <p class="news-title">{{itemInfo.title}}</p>
+      <p class="news-description">{{itemInfo.content}}</p>
+      <p class="news-date">Date: {{itemInfo.publishedAt}}</p>
+      <p class="news-author">Author: {{itemInfo.author}}</p>
+    </div>
+    <div *ngIf="isEditable" class="buttons-container">
+      <app-button [additionalStyle]="{'width': '100%'}" [title]="'Edit'" [buttonStyle]="'dark'" (onPress)="editNews($event)"></app-button>
+      <app-button [additionalStyle]="{'width': '100%'}" [title]="'Delete'" [buttonStyle]="'dark'" (onPress)="removeNews($event)"></app-button>
+    </div>
+  </div>
+</div>
