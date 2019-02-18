@@ -1,16 +1,16 @@
   <app-dropdown
-    [dropdownTitle]="'Select Source'"
+    [dropdownTitle]="dropdownTitle"
     [dropdownItems]="dropdownItems"
     (onPress)="sourcePicked($event)"
   ></app-dropdown>
   <app-text-filter-group></app-text-filter-group>
   <app-checkbox
-    *ngIf="userIsLogged"
+    *ngIf="isUserLogged"
     [labelText]="'Only created by me'"
     (getCheckedValue)="setIsChecked($event)"
   ></app-checkbox>
   <app-button
-    *ngIf="userIsLogged"
+    *ngIf="isUserLogged"
     [title]="'Add Article'"
     [buttonStyle]="'dark'"
     (onPress)="addArticle($event)"

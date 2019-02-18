@@ -1,4 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { map } from 'lodash';
+
+import { UserInfoService } from './../../user-info.service';
 
 @Component({
   selector: 'app-header',
@@ -6,19 +9,30 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-  @Input() userIsLogged: boolean;
+  protected isUserLogged: boolean;
+  protected subscriptions: any[] = [];
 
-  constructor() { }
+  constructor(private userInfoService: UserInfoService) { }
 
   ngOnInit() {
+    this.isUserLogged = this.userInfoService.getUserInfo();
+    this.subscriptions.push(
+      this.userInfoService.updateIsUserLoggedStatus.subscribe(
+        isUserLogged => this.isUserLogged = isUserLogged,
+      ),
+    );
   }
 
-  logIn(buttonStyle: string) {
-    console.log(`pressed ${buttonStyle} button`);
+  ngOnDestroy() {
+    map(this.subscriptions, subscription => subscription.unsubscribe());
   }
 
-  logOut(buttonStyle: string) {
-    console.log(`pressed ${buttonStyle} button`);
+  logIn() {
+    this.userInfoService.changeIsUserLogged(true);
+  }
+
+  logOut() {
+    this.userInfoService.changeIsUserLogged(false);
   }
 
 }

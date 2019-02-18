@@ -1,15 +1,23 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserInfoService {
 
-  private userIsLogged: boolean = true;
+  private isUserLogged: boolean = true;
+
+  updateIsUserLoggedStatus: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   constructor() { }
 
   getUserInfo() {
-    return this.userIsLogged;
+    return this.isUserLogged;
+  }
+
+  changeIsUserLogged(loggedStatus: boolean) {
+    console.log('loggedStatus', loggedStatus)
+    this.isUserLogged = loggedStatus;
+    this.updateIsUserLoggedStatus.emit(this.isUserLogged);
   }
 }

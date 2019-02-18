@@ -1,3 +1,4 @@
+import { DateTransformerPipe } from './date-transformer.pipe';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -21,7 +22,8 @@ import { TextareaComponent } from './textarea/textarea.component';
     InputComponent,
     CheckboxComponent,
     DropdownComponent,
-    TextareaComponent
+    TextareaComponent,
+    DateTransformerPipe,
   ],
   imports: [
     CommonModule,
@@ -35,6 +37,7 @@ import { TextareaComponent } from './textarea/textarea.component';
     CheckboxComponent,
     DropdownComponent,
     TextareaComponent,
+    DateTransformerPipe,
   ],
 })
 export class SharedModule { }

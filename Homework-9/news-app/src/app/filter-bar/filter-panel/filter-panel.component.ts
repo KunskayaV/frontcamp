@@ -1,7 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { Router } from '@angular/router';
+import { map } from 'lodash';
+
+import { UserInfoService } from './../../user-info.service';
 import { SourceItem } from '../filter-bar.model';
 import { FilterBarService } from '../filter-bar.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-filter-panel',
@@ -9,28 +12,44 @@ import { Router } from '@angular/router';
   styleUrls: ['./filter-panel.component.css']
 })
 export class FilterPanelComponent implements OnInit {
-  @Input() userIsLogged: boolean;
+  protected isUserLogged: boolean;
 
   public dropdownItems: SourceItem[] =[];
-  private showOnlyMyNews: boolean = false;
+  protected dropdownTitle: string = 'Select Source';
+  protected showOnlyMyNews: boolean = false;
+  protected subscriptions: any[] = [];
 
-  constructor(private FilterBarService: FilterBarService, private router: Router) { }
+  constructor(
+    private filterBarService: FilterBarService,
+    private router: Router,
+    private userInfoService: UserInfoService,
+  ) { }
 
   ngOnInit() {
-    this.dropdownItems = this.FilterBarService.getSources();
+    this.dropdownItems = this.filterBarService.getSources();
+    this.isUserLogged = this.userInfoService.getUserInfo();
+    this.subscriptions.push(
+      this.userInfoService.updateIsUserLoggedStatus.subscribe(
+        isUserLogged => this.isUserLogged = isUserLogged,
+      ),
+    );
+  }
+
+  ngOnDestroy() {
+    map(this.subscriptions, subscription => subscription.unsubscribe());
   }
 
   addArticle() {
     this.router.navigate(['./news', 'newitem', 'edit']);
-    console.log('Add article');
   }
 
   setIsChecked(value: boolean) {
-    this.showOnlyMyNews = value;
-    console.log('show only my news', this.showOnlyMyNews);
+    this.filterBarService.setCustomFilter(value);
+    this.filterBarService.applyFilters();
   }
 
   sourcePicked(index: number) {
-    console.log('picked source on index', index);
+    this.filterBarService.setPickedSource(index);
+    this.dropdownTitle = this.filterBarService.getPickedSource();
   }
 }

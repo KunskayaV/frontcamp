@@ -12,7 +12,7 @@ import { FilterBarModule } from './filter-bar/filter-bar.module';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,

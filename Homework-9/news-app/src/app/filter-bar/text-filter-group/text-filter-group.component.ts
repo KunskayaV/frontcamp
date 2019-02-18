@@ -1,3 +1,4 @@
+import { FilterBarService } from './../filter-bar.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -6,18 +7,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./text-filter-group.component.css']
 })
 export class TextFilterGroupComponent implements OnInit {
-
-  private inputFilter: string = '';
-  constructor() { }
+  private filterText: string = '';
+  constructor(private filterService: FilterBarService) { }
 
   ngOnInit() {
   }
 
-  getInputValue(value:string) {
-    this.inputFilter = value;
-  }
-
   filterList() {
-    console.log('filter', this.inputFilter);
+    this.filterService.setTextFilter(this.filterText);
+    this.filterService.applyFilters();
   }
 }

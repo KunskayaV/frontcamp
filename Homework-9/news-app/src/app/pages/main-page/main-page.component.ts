@@ -1,4 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { map } from 'lodash';
+
+import { FilterBarService } from './../../filter-bar/filter-bar.service';
 import { UserInfoService } from 'src/app/user-info.service';
 
 @Component({
@@ -7,21 +10,33 @@ import { UserInfoService } from 'src/app/user-info.service';
   styleUrls: ['./main-page.component.css']
 })
 export class MainPageComponent implements OnInit {
-  pickedSource: string | undefined;
-  userIsLogged: boolean;
+  pickedSource: string | undefined = '';
+  protected isUserLogged: boolean;
+  protected subscriptions: any[] = [];
 
-  constructor(private userService: UserInfoService) { }
+  constructor(
+    private userInfoService: UserInfoService,
+    private filterBarService: FilterBarService,
+  ) { }
 
   ngOnInit() {
-    this.userIsLogged = this.userService.getUserInfo();
+    this.isUserLogged = this.userInfoService.getUserInfo();
+    this.subscriptions.push(
+      this.userInfoService.updateIsUserLoggedStatus.subscribe(
+        isUserLogged => this.isUserLogged = isUserLogged,
+      ),
+    );
+  }
+
+  ngOnDestroy() {
+    map(this.subscriptions, subscription => subscription.unsubscribe());
   }
 
   get pageSource() {
-    return this.pickedSource || "All sources";
+    return this.filterBarService.getPickedSource();
   }
 
   loadMore() {
     console.log('Load more');
   }
-
 }

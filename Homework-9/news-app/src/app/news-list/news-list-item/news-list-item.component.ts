@@ -1,7 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { NewsItem } from '../news-item.model';
 import { Router } from '@angular/router';
+import { map } from 'lodash';
 
+import { NewsItem } from '../news-item.model';
 import { UserInfoService } from 'src/app/user-info.service';
 
 @Component({
@@ -13,12 +14,23 @@ export class NewsListItemComponent implements OnInit {
 
   @Input() itemInfo: NewsItem;
 
-  private isEditable: boolean;
+  protected isEditable: boolean;
+  protected subscriptions: any[] = [];
 
   constructor(private router: Router, private userService: UserInfoService) { }
 
   ngOnInit() {
-    this.isEditable = this.userService.getUserInfo() && this.itemInfo.id === 'custom';
+    const isCustom = this.itemInfo.id === 'custom';
+    this.isEditable = this.userService.getUserInfo() && isCustom;
+    this.subscriptions.push(
+      this.userService.updateIsUserLoggedStatus.subscribe(
+        isUserLogged => this.isEditable = isUserLogged  && isCustom,
+      ),
+    );
+  }
+
+  ngOnDestroy() {
+    map(this.subscriptions, subscription => subscription.unsubscribe());
   }
 
   openNews() {

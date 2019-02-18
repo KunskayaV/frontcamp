@@ -1,8 +1,9 @@
+import { UserInfoService } from './../../user-info.service';
 import { Component, OnInit } from '@angular/core';
-import { find } from 'lodash';
+import { find, map } from 'lodash';
 
 import { NewsItem } from 'src/app/news-list/news-item.model';
-import { NewsListService } from 'src/app/news-list.service';
+import { NewsListService } from 'src/app/news-list/news-list.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -37,25 +38,37 @@ export class EditNewsPageComponent implements OnInit {
 
   private routeParams: any = {};
   private paramsSubscribe: any;
-  private dataSubscribe: any;
+  protected subscriptions: any[] = [];
 
   constructor(
-    private newsList: NewsListService, 
+    private userService: UserInfoService,
+    private newsList: NewsListService,
     private route: ActivatedRoute,
     private router: Router,
   ) {
-    this.paramsSubscribe = this.route.params.subscribe(data => {
-      this.routeParams.id = data.id;
-    });
+    this.subscriptions.push(
+      this.route.params.subscribe(data => {
+        this.routeParams.id = data.id;
+      }),
+    );
    }
 
   ngOnInit() {
     const article = find(this.newsList.getNews(), { id: this.routeParams.id });
     if (article) this.newsToEdit = article;
+    this.subscriptions.push(
+      this.userService.updateIsUserLoggedStatus.subscribe(
+        isUserLogged => {
+          if (!isUserLogged) {
+            this.router.navigate(['./news']);
+          }
+        }
+      ),
+    );
   }
 
   ngOnDestroy() {
-    this.paramsSubscribe.unsubscribe();
+    map(this.subscriptions, subscription => subscription.unsubscribe());
   }
 
   getValueToSet(key: string) {

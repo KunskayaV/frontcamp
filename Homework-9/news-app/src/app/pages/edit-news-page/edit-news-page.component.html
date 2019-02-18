@@ -13,14 +13,13 @@
       (getInputValue)="setValue($event, 'description')"
       [setInputValue]="getValueToSet('description')"
 
-    ></app-input>  
+    ></app-input>
     <app-textarea
       [label]="'Content'"
       [rows]="7"
       (getEnteredText)="setValue($event, 'content')"
       [setInputValue]="getValueToSet('content')"
-
-    ></app-textarea>  
+    ></app-textarea>
   </div>
   <div class="secondary-column">
     <div class="radio-controls-containter">
@@ -31,31 +30,31 @@
         <input type="radio" [value]="1"  name="imageSource" [ngModel]="imageSource" (ngModelChange)="change($event)"> File
       </label>
     </div>
-    
+
     <app-input
       [label]="'Image'"
       [placeholder]="' '"
       (getInputValue)="setValue($event, 'image')"
       [setInputValue]="getValueToSet('image')"
-    ></app-input>  
+    ></app-input>
     <app-input
       [label]="'Date'"
       [placeholder]="' '"
       (getInputValue)="setValue($event, 'date')"
       [setInputValue]="getValueToSet('date')"
-    ></app-input>  
+    ></app-input>
     <app-input
       [label]="'Author'"
       [placeholder]="' '"
       (getInputValue)="setValue($event, 'author')"
       [setInputValue]="getValueToSet('author')"
-    ></app-input>  
+    ></app-input>
     <app-input
       [label]="'Source URL'"
       [placeholder]="' '"
       (getInputValue)="setValue($event, 'sourceUrl')"
       [setInputValue]="getValueToSet('sourceUrl')"
-    ></app-input>  
+    ></app-input>
     <div class="buttons-container">
       <app-button
         [title]="'Save'"

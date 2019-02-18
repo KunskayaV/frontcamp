@@ -5,7 +5,7 @@
     <div class="text-container">
       <p class="news-title">{{itemInfo.title}}</p>
       <p class="news-description">{{itemInfo.content}}</p>
-      <p class="news-date">Date: {{itemInfo.publishedAt}}</p>
+      <p class="news-date">Date: {{itemInfo.publishedAt | dateTransformer: itemInfo.publishedAt}}</p>
       <p class="news-author">Author: {{itemInfo.author}}</p>
     </div>
     <div *ngIf="isEditable" class="buttons-container">

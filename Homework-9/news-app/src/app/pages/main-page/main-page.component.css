@@ -15,5 +15,7 @@
     margin: 0;
     padding: 10px;
     font-size: 19px;
+    font-weight: bold;
+    text-align: center;
     background-color: #e7e4e4;
 }

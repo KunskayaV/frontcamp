@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { map } from 'lodash';
 
 import { dateToLocaleString } from 'src/app/helpers';
-import { NewsItem } from './news-list/news-item.model';
+import { NewsItem } from './news-item.model';
 
 
 @Injectable({
@@ -13,8 +13,7 @@ export class NewsListService {
   constructor() { }
 
   public getNews(): NewsItem[] {
-    return map(
-      [
+    return [
         {
           id: 'custom',
           author: 'Vasia Pupkin',
@@ -42,8 +41,6 @@ export class NewsListService {
           publishedAt: "2019-02-10T11:55:00Z",
           content: "DUBAI (Reuters) - Saudi Arabia had “absolutely nothing to do” with the National Enquirer’s reporting on an extramarital relationship involving Amazon.com Inc Chief Executive Jeff Bezos, the kingdom’s minister of state for foreign affairs said. Bezos on Thursd… [+1338 chars]"
         },
-      ],
-      item => ({ ...item, publishedAt: dateToLocaleString(item.publishedAt) })
-    );
+      ];
   }
 }

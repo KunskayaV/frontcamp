@@ -1,5 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { NewsListService } from '../../news-list.service';
+import { map } from 'lodash';
+
+import { FilterBarService } from './../../filter-bar/filter-bar.service';
+import { NewsListService } from '../news-list.service';
 import { NewsItem } from '../news-item.model';
 
 @Component({
@@ -10,10 +13,33 @@ import { NewsItem } from '../news-item.model';
 export class NewsListComponent implements OnInit {
 
   public news: NewsItem[] = [];
-  constructor(private newsListService: NewsListService) { }
+  private subscriptions: any[] = [];
+  public textFilter: string;
+  public customFilter: boolean;
+
+
+  constructor(
+    private newsListService: NewsListService,
+    private filterService: FilterBarService,
+  ) { }
 
   ngOnInit() {
     this.news = this.newsListService.getNews();
+    this.textFilter = this.filterService.getTextFilter();
+    this.customFilter = this.filterService.getCustomFilter();
+    this.subscriptions.push(
+      this.filterService.apply.subscribe(
+        ({ textFilter, customFilter }) => this.setFilterForList(textFilter, customFilter),
+      ),
+    );
   }
 
+  ngOnDestroy() {
+    map(this.subscriptions, subscription => subscription.unsubscribe());
+  }
+
+  setFilterForList(text: string, showCustom: boolean) {
+    this.textFilter = text;
+    this.customFilter = showCustom;
+  }
 }

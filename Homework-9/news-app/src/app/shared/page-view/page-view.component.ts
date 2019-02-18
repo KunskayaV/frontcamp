@@ -7,7 +7,7 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class PageViewComponent implements OnInit {
   @Input() source: string;
-  @Input() userIsLogged: boolean;
+  @Input() isUserLogged: boolean;
 
   constructor() { }
 

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { find } from 'lodash';
- 
+import { find, map } from 'lodash';
+
 import { NewsItem } from 'src/app/news-list/news-item.model';
-import { NewsListService } from 'src/app/news-list.service';
+import { NewsListService } from 'src/app/news-list/news-list.service';
 import { UserInfoService } from 'src/app/user-info.service';
 
 @Component({
@@ -18,7 +18,8 @@ export class NewsItemPageComponent implements OnInit {
   public pageSource: string = '';
 
   private itemInfo: NewsItem;
-  private isEditable: boolean;
+  protected isEditable: boolean;
+  protected subscriptions: any = [];
 
 
   constructor(
@@ -27,18 +28,32 @@ export class NewsItemPageComponent implements OnInit {
     private newsList: NewsListService,
     private userService: UserInfoService
   ) {
-    this.paramsSubscribe = this.route.params.subscribe(data => {
-      this.routeParams.id = data.id;
-    });
+    this.subscriptions.push(
+      this.route.params.subscribe(data => {
+        this.routeParams.id = data.id;
+      }),
+    );
   }
 
   ngOnInit() {
     this.itemInfo = find(this.newsList.getNews(), { id: this.routeParams.id});
-    this.isEditable = this.userService.getUserInfo() && this.itemInfo.id === 'custom';
+    const isCustom = this.itemInfo.id === 'custom';
+    this.isEditable = this.userService.getUserInfo() && isCustom;
+    if (isCustom) {
+      this.subscriptions.push(
+        this.userService.updateIsUserLoggedStatus.subscribe(
+          isUserLogged => {
+            if (!isUserLogged) {
+              this.router.navigate(['./news']);
+            }
+          }
+        )
+      );
+    }
   }
 
   ngOnDestroy() {
-    this.paramsSubscribe.unsubscribe();
+    map(this.subscriptions, subscription => subscription.unsubscribe());
   }
 
   editNews() {

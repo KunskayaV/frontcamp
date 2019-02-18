@@ -3,7 +3,7 @@
   <div class="text-container">
     <div class="title-date-wrapper">
       <p class="news-title">{{itemInfo.title}}</p>
-      <p class="news-date">Date: {{itemInfo.publishedAt}}</p>
+      <p class="news-date">Date: {{itemInfo.publishedAt | dateTransformer}}</p>
     </div>
     <p class="news-description">{{itemInfo.description}}</p>
     <app-button
