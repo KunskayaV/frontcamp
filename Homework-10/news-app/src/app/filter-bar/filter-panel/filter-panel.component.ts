@@ -14,8 +14,6 @@ import { FilterBarService } from '../filter-bar.service';
 export class FilterPanelComponent implements OnInit {
   protected isUserLogged: boolean;
 
-  public dropdownItems: SourceItem[] =[];
-  protected dropdownTitle: string = 'Select Source';
   protected showOnlyMyNews: boolean = false;
   protected subscriptions: any[] = [];
 
@@ -26,13 +24,21 @@ export class FilterPanelComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.dropdownItems = this.filterBarService.getSources();
+    this.filterBarService.fetchSources();
     this.isUserLogged = this.userInfoService.getUserInfo();
     this.subscriptions.push(
       this.userInfoService.updateIsUserLoggedStatus.subscribe(
         isUserLogged => this.isUserLogged = isUserLogged,
       ),
     );
+  }
+
+  get dropdownItems(): SourceItem[] {
+    return this.filterBarService.getSources();
+  }
+
+  get dropdownTitle(): SourceItem[] | string {
+    return this.filterBarService.getPickedSourceName() || 'Select Source';
   }
 
   ngOnDestroy() {
@@ -50,6 +56,5 @@ export class FilterPanelComponent implements OnInit {
 
   sourcePicked(index: number) {
     this.filterBarService.setPickedSource(index);
-    this.dropdownTitle = this.filterBarService.getPickedSource();
   }
 }

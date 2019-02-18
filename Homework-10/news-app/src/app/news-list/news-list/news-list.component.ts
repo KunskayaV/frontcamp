@@ -12,7 +12,6 @@ import { NewsItem } from '../news-item.model';
 })
 export class NewsListComponent implements OnInit {
 
-  public news: NewsItem[] = [];
   private subscriptions: any[] = [];
   public textFilter: string;
   public customFilter: boolean;
@@ -24,7 +23,6 @@ export class NewsListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.news = this.newsListService.getNews();
     this.textFilter = this.filterService.getTextFilter();
     this.customFilter = this.filterService.getCustomFilter();
     this.subscriptions.push(
@@ -38,8 +36,16 @@ export class NewsListComponent implements OnInit {
     map(this.subscriptions, subscription => subscription.unsubscribe());
   }
 
+  get news(): NewsItem[] {
+    return this.newsListService.getNews();
+  }
+
   setFilterForList(text: string, showCustom: boolean) {
     this.textFilter = text;
     this.customFilter = showCustom;
+  }
+
+  loadMore() {
+    this.newsListService.loadMore();
   }
 }

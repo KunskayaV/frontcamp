@@ -4,3 +4,9 @@
     [itemInfo]="item"
   ></app-news-list-item>
 </div>
+<app-button
+  [title]="'Load More'"
+  [buttonStyle]="'dark'"
+  (onPress)="loadMore($event)"
+  [additionalStyle]="{'width': '100%'}"
+></app-button>

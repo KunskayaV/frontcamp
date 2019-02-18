@@ -6,7 +6,7 @@
     <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="scrollable-menu">
       <app-button
         *ngFor="let item of dropdownItems; let index = index"
-        [title]="item.title"
+        [title]="item.name"
         [additionalStyle]="{'width': '100%', 'text-align': 'left'}"
         (onPress)="pickItem($event, index)"
         >

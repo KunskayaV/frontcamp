@@ -1,9 +1,10 @@
-export function dateToLocaleString(date) {
-    const options = {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    };
-  
-    return (new Date(date)).toLocaleString('en-US', options);
-  }
+export function toQueryString(params = {}) {
+  const paramsArray = Object.entries(params);
+
+  const query = paramsArray.reduce(
+    (acc, [key, value], index) => `${acc}${index ? '&' : '?'}${encodeURIComponent(key)}=${encodeURIComponent(value)}`,
+    ''
+  );
+
+  return query;
+}

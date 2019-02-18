@@ -1,5 +1,7 @@
 import { Injectable, EventEmitter } from '@angular/core';
+
 import { SourceItem } from './filter-bar.model';
+import { ApiService } from '../api.service';
 
 @Injectable({
   providedIn: 'root'
@@ -7,35 +9,39 @@ import { SourceItem } from './filter-bar.model';
 
 export class FilterBarService {
 
-  protected sources: SourceItem[] = [
-    { id: 0, title: 'All sources' },
-    { id: 1, title: 'source 1' },
-    { id: 2, title: 'source 2' },
-    { id: 3, title: 'source 3' },
-    { id: 4, title: 'source 4' },
-    { id: 5, title: 'source 5' },
-    { id: 6, title: 'source 6' },
-  ];
+  protected sources: SourceItem[] = [];
 
-  protected pickedSource: string;
+  protected pickedSource: SourceItem;
   protected filterText: string = '';
   private showOnlyMyNews: boolean = false;
   public apply: EventEmitter<any> = new EventEmitter<any>();
+  public sourceShanged: EventEmitter<string> = new EventEmitter<string>();
 
-  constructor() {
-    this.pickedSource = this.sources[0].title;
+  constructor(private apiService: ApiService) {}
+
+  public fetchSources() {
+    return this.apiService.fetchSources()
+    .subscribe(
+      response => {
+        this.sources = response;
+        this.pickedSource = this.sources[0];
+        this.sourceShanged.emit(this.pickedSource.id);
+      },
+      error => console.log(error)
+    );
   }
 
-  public getSources(): SourceItem[] {
+  getSources(): SourceItem[] {
     return this.sources;
   }
 
-  public getPickedSource(): string {
-    return this.pickedSource;
+  public getPickedSourceName(): string {
+    return this.pickedSource && this.pickedSource.name;
   }
 
   setPickedSource(index: number) {
-    this.pickedSource = this.sources[index].title;
+    this.pickedSource = this.sources[index];
+    this.sourceShanged.emit(this.pickedSource.id);
   }
 
   getCustomFilter(): boolean {

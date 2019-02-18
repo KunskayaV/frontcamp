@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -23,6 +24,7 @@ import { FilterBarModule } from './filter-bar/filter-bar.module';
     PagesModule,
     NewsListModule,
     FilterBarModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -33,10 +33,6 @@ export class MainPageComponent implements OnInit {
   }
 
   get pageSource() {
-    return this.filterBarService.getPickedSource();
-  }
-
-  loadMore() {
-    console.log('Load more');
+    return this.filterBarService.getPickedSourceName();
   }
 }
