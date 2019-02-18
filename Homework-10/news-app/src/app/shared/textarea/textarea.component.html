@@ -1,0 +1,7 @@
+<div class="form-group">
+  <label *ngIf="label">{{label}}</label>
+  <textarea
+    #myTextarea [ngModel]="value" (ngModelChange)="provideEnteredText($event)"
+    class="form-control" rows="rows" 
+  ></textarea>
+</div>

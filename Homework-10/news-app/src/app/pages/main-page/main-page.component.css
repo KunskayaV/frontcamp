@@ -1,0 +1,21 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.wrapper {
+    padding: 5% 10%;
+}
+
+.title {
+    display: flex;
+    justify-content: center;
+    height: 50px;
+    margin: 0;
+    padding: 10px;
+    font-size: 19px;
+    font-weight: bold;
+    text-align: center;
+    background-color: #e7e4e4;
+}

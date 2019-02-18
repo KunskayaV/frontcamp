@@ -1,0 +1,10 @@
+<header>
+  <nav class="navbar navbar-dark bg-dark">
+    <img src="http://grandslamadoption.com/wp-content/uploads/2017/03/ENewsLogo.png" class="logo" alt="news"/>
+    <div class="buttons-container">
+      <app-button *ngIf="!isUserLogged" [title]="'User login'" [buttonStyle]="'dark'" (onPress)="logIn($event)"></app-button>
+
+      <app-button *ngIf="isUserLogged" [title]="'Log out'" [buttonStyle]="'light'" (onPress)="logOut($event)"></app-button>
+    </div>
+  </nav>
+</header>

@@ -1,0 +1,65 @@
+:host {
+    display: flex;
+    flex-direction: column;
+}
+
+.title {
+    display: flex;
+    justify-content: center;
+    height: 50px;
+    margin: 0;
+    padding: 10px;
+    font-size: 19px;
+    background-color: #e7e4e4;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 50%;
+    min-width: 400px;
+    margin: 50px auto;
+    padding: 10px;
+    border: 1px solid #000000;
+}
+
+.buttons-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.buttons-container :first-child {
+    margin-right: 5px;
+}
+
+.main-column {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.secondary-column {
+    position: relative;
+    flex: 1;
+}
+
+.radio-controls-containter {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.source-label {
+    font-size: 12px;
+}
+
+.source-label > input {
+    margin-left: 10px;
+    font-size: 12px;
+}
+
+.source-label:first-of-type {
+    margin-right: 30px;
+}

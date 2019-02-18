@@ -1,0 +1,6 @@
+<div class="news-list">
+  <app-news-list-item
+    *ngFor="let item of news | filterNews: textFilter:customFilter"
+    [itemInfo]="item"
+  ></app-news-list-item>
+</div>

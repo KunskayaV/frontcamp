@@ -1,0 +1,65 @@
+:host {
+    display: flex;
+    flex-direction: column;
+}
+
+.title {
+    display: flex;
+    justify-content: center;
+    height: 50px;
+    margin: 0;
+    padding: 10px;
+    font-size: 19px;
+    background-color: #e7e4e4;
+}
+
+.news-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 10px;
+    text-decoration: none;
+    cursor: pointer;
+    color: black;
+    border: 1px solid #000000;
+}
+
+.card-image {
+    min-width: 100px;
+    min-height: 100px;
+    width: 15vw;
+    height: 15vw;
+}
+
+.text-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin: 0px 20px;
+}
+
+.news-title {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.news-description {
+    font-size: 15px;
+}
+
+.buttons-container {
+    align-self: flex-start;
+    display: flex;
+    flex-direction: column;
+}
+
+.buttons-container :first-child {
+    margin-bottom: 5px;
+}
+
+.news-date, .news-author {
+    font-size: 13px;
+}

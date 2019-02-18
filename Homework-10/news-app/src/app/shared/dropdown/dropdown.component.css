@@ -1,0 +1,19 @@
+.scrollable-menu {
+    height: auto;
+    max-height: 200px;
+    overflow-x: hidden;
+}
+
+.buttonWidth {
+  width: 130px;
+  white-space: nowrap;
+}
+
+.buttonText {
+  display: inline-block;
+  width: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: sub;
+}

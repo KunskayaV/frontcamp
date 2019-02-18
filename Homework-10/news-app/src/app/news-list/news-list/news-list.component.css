@@ -1,0 +1,15 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.news-list {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 50px;
+}
+
+.news-list > *:not(:last-child) {
+    margin-bottom: 32px;
+}

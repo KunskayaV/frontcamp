@@ -1,0 +1,8 @@
+<button
+  type="button"
+  [ngClass]="buttonClass"
+  (click)="click($event)"
+  [ngStyle]="additionalStyle ? additionalStyle : {}"
+>
+  {{title}}
+</button>

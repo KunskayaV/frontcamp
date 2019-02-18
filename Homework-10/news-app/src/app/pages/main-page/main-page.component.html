@@ -1,0 +1,11 @@
+<p class="title">{{pageSource}}</p>
+<app-filter-panel></app-filter-panel>
+<main class="wrapper">
+  <app-news-list></app-news-list>
+  <app-button
+    [title]="'Load More'"
+    [buttonStyle]="'dark'"
+    (onPress)="loadMore($event)"
+    [additionalStyle]="{'width': '100%'}"
+  ></app-button>
+</main>

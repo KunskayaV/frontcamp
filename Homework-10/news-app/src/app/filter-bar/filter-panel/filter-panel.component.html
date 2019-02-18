@@ -1,0 +1,18 @@
+  <app-dropdown
+    [dropdownTitle]="dropdownTitle"
+    [dropdownItems]="dropdownItems"
+    (onPress)="sourcePicked($event)"
+  ></app-dropdown>
+  <app-text-filter-group></app-text-filter-group>
+  <app-checkbox
+    *ngIf="isUserLogged"
+    [labelText]="'Only created by me'"
+    (getCheckedValue)="setIsChecked($event)"
+  ></app-checkbox>
+  <app-button
+    *ngIf="isUserLogged"
+    [title]="'Add Article'"
+    [buttonStyle]="'dark'"
+    (onPress)="addArticle($event)"
+    [additionalClass]="'btn-sm'"
+  ></app-button>

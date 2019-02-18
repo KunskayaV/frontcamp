@@ -1,0 +1,7 @@
+<div class="form-group">
+  <label *ngIf="label">{{label}}</label>
+  <input
+    #myInput [ngModel]="value" (ngModelChange)="provideInputValue($event)"
+    type="text" placeholder="{{placeholder}}" class="form-control"
+  />
+</div>
