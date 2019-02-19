@@ -7,9 +7,8 @@ module.exports.createNewsModel = function () {
     id: {
       type: String,
       unique: true,
-      required: true,
     },
-    name: {
+    title: {
       type: String,
       required: true,
     },
@@ -17,7 +16,7 @@ module.exports.createNewsModel = function () {
       type: String,
       required: true,
     },
-    url: {
+    urlToImage: {
       type: String,
       required: true,
     },

@@ -5,6 +5,8 @@ import { find, map } from 'lodash';
 import { NewsItem } from 'src/app/news-list/news-item.model';
 import { NewsListService } from 'src/app/news-list/news-list.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { EditPageService } from './edit-page.service';
+import { ApiService } from 'src/app/api.service';
 
 @Component({
   selector: 'app-edit-news-page',
@@ -39,12 +41,15 @@ export class EditNewsPageComponent implements OnInit {
   private routeParams: any = {};
   private paramsSubscribe: any;
   protected subscriptions: any[] = [];
+  private saveRequest: string = '';
 
   constructor(
     private userService: UserInfoService,
     private newsList: NewsListService,
     private route: ActivatedRoute,
     private router: Router,
+    private editPageService: EditPageService,
+    private apiService: ApiService,
   ) {
     this.subscriptions.push(
       this.route.params.subscribe(data => {
@@ -54,8 +59,13 @@ export class EditNewsPageComponent implements OnInit {
    }
 
   ngOnInit() {
-    const article = find(this.newsList.getNews(), { id: this.routeParams.id });
-    if (article) this.newsToEdit = article;
+    const article = this.editPageService.getEditItem();
+    if (article) {
+      this.saveRequest = 'postMyNews';
+      this.newsToEdit = article;
+    } else {
+      this.saveRequest = 'putMyNews';
+    }
     this.subscriptions.push(
       this.userService.updateIsUserLoggedStatus.subscribe(
         isUserLogged => {
@@ -76,19 +86,20 @@ export class EditNewsPageComponent implements OnInit {
   }
 
   setValue(value, key) {
-    this.newNewsData[this.mapping[key]] = value;
+    this.newsToEdit[this.mapping[key]] = value;
   }
 
   saveNews() {
-    console.log('save news');
+    this.apiService[this.saveRequest](this.newsToEdit)
+      .subscribe(result => console.log('result', result));
+    this.router.navigate(['./news']);
   }
 
   cancelEditing() {
-    console.log('cancel editing');
+    this.router.navigate(['./news']);
   }
 
   change(value: number) {
-    console.log('change imageSource to', value);
     this.imageSource = value;
   }
 

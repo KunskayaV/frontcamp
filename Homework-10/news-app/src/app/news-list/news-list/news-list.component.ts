@@ -29,6 +29,9 @@ export class NewsListComponent implements OnInit {
       this.filterService.apply.subscribe(
         ({ textFilter, customFilter }) => this.setFilterForList(textFilter, customFilter),
       ),
+      this.filterService.sourceShanged.subscribe(
+        newSource => this.newsListService.changeNewsSource(newSource),
+      ),
     );
   }
 
@@ -37,7 +40,10 @@ export class NewsListComponent implements OnInit {
   }
 
   get news(): NewsItem[] {
-    return this.newsListService.getNews();
+    console.log('sustom', this.customFilter)
+    return this.customFilter
+      ? this.newsListService.getMyNews()
+      : this.newsListService.getNews();
   }
 
   setFilterForList(text: string, showCustom: boolean) {

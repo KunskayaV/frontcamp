@@ -6,7 +6,9 @@ function NewsTemplate(data = {}) {
     name, description, url,
     category = 'default',
     language = '',
-    country = ''
+    country = '',
+    title = '',
+    urlToImage = '',
   } = data;
   this.id = id;
   this.name = name;
@@ -15,6 +17,8 @@ function NewsTemplate(data = {}) {
   this.category = category;
   this.language = language;
   this.country = country;
+  this.title = title;
+  this.urlToImage = urlToImage;
 }
 
 module.exports = NewsTemplate;

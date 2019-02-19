@@ -58,10 +58,11 @@ router.route('/:newsId')
       failureRedirect: '/v3/register',
     }),
     function(req, res) {
-
       const callback = (err, news) => {
-        if (err) res.status(400).send('Something went wrong');
-
+        if (err) {
+          res.status(400).send('Something went wrong');
+          return;
+        }
         res.status(204).send('News updated');
       };
 

@@ -21,14 +21,14 @@ export class FilterBarService {
 
   public fetchSources() {
     return this.apiService.fetchSources()
-    .subscribe(
-      response => {
-        this.sources = response;
-        this.pickedSource = this.sources[0];
-        this.sourceShanged.emit(this.pickedSource.id);
-      },
-      error => console.log(error)
-    );
+      .subscribe(
+        response => {
+          this.sources = response;
+          this.pickedSource = this.sources[0];
+          this.sourceShanged.emit(this.pickedSource.id);
+        },
+        error => console.log(error)
+      );
   }
 
   getSources(): SourceItem[] {

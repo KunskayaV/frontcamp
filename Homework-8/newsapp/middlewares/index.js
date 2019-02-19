@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const winston = require('winston');
 const passport = require('passport');
+const cors = require('cors')
 
 const indexRouter = require('../routes/index');
 const newsRouter = require('../routes/news');
@@ -18,6 +19,12 @@ function addMiddlewares(app) {
   app.use(cookieParser());
   app.use(express.static(path.join(__dirname, 'public')));
   app.use(passport.initialize());
+  var corsOptions = {
+    origin: 'http://localhost:4200',
+    optionsSuccessStatus: 200
+  }
+  
+  app.use(cors(corsOptions));
 
   app.all('*', function(req, res, next) {
     winston.log('info', `Date: ${(new Date).toLocaleString()} Url: ${req.url}`);
