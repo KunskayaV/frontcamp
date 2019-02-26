@@ -40,7 +40,6 @@ export class NewsListComponent implements OnInit {
   }
 
   get news(): NewsItem[] {
-    console.log('sustom', this.customFilter)
     return this.customFilter
       ? this.newsListService.getMyNews()
       : this.newsListService.getNews();

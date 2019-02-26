@@ -16,7 +16,6 @@ export class UserInfoService {
   }
 
   changeIsUserLogged(loggedStatus: boolean) {
-    console.log('loggedStatus', loggedStatus)
     this.isUserLogged = loggedStatus;
     this.updateIsUserLoggedStatus.emit(this.isUserLogged);
   }

@@ -1,4 +1,3 @@
-import { DateTransformerPipe } from './date-transformer.pipe';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -12,6 +11,7 @@ import { CheckboxComponent } from './checkbox/checkbox.component';
 import { DropdownComponent } from './dropdown/dropdown.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TextareaComponent } from './textarea/textarea.component';
+import { DateTransformerPipe } from './date-transformer.pipe';
 
 @NgModule({
   declarations: [

@@ -13,9 +13,9 @@ import { EditPageService } from 'src/app/pages/edit-news-page/edit-page.service'
   styleUrls: ['./filter-panel.component.css']
 })
 export class FilterPanelComponent implements OnInit {
-  protected isUserLogged: boolean;
+  public isUserLogged: boolean;
 
-  protected showOnlyMyNews: boolean;
+  public showOnlyMyNews: boolean;
   protected subscriptions: any[] = [];
 
   constructor(

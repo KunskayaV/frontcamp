@@ -12,7 +12,6 @@ import { NewsItem } from './news-list/news-item.model';
 })
 export class ApiService {
 
-  
   static httpOptions = {
     headers: new HttpHeaders({
       'Content-Type':  'application/json',

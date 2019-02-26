@@ -19,7 +19,7 @@ export class NewsItemPageComponent implements OnInit {
   private paramsSubscribe: any;
   public pageSource: string = '';
 
-  private itemInfo: NewsItem;
+  public itemInfo: NewsItem;
   protected isEditable: boolean;
   protected subscriptions: any = [];
 
@@ -27,7 +27,6 @@ export class NewsItemPageComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private newsList: NewsListService,
     private userService: UserInfoService,
     private newsPageService: NewsItemPageService,
     private editPageService: EditPageService,

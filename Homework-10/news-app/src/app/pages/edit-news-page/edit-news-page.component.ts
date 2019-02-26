@@ -45,7 +45,6 @@ export class EditNewsPageComponent implements OnInit {
 
   constructor(
     private userService: UserInfoService,
-    private newsList: NewsListService,
     private route: ActivatedRoute,
     private router: Router,
     private editPageService: EditPageService,

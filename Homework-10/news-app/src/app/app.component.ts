@@ -8,11 +8,12 @@ import { UserInfoService } from './user-info.service';
 })
 export class AppComponent implements OnInit {
 
-  private isUserLogged: boolean;
+  protected isUserLogged: boolean;
   constructor(private userService: UserInfoService) {}
 
   ngOnInit() {
     this.isUserLogged = this.userService.getUserInfo();
   }
+
   title = 'news-app';
 }

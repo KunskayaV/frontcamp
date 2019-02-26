@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PageViewComponent } from './page-view.component';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('PageViewComponent', () => {
   let component: PageViewComponent;
@@ -8,7 +9,8 @@ describe('PageViewComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PageViewComponent ]
+      declarations: [ PageViewComponent ],
+      schemas: [NO_ERRORS_SCHEMA],
     })
     .compileComponents();
   }));
